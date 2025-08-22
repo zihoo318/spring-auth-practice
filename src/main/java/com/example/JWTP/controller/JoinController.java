@@ -1,6 +1,7 @@
 package com.example.JWTP.controller;
 
 import com.example.JWTP.DTO.JoinDTO;
+import com.example.JWTP.service.JoinService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
