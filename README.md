@@ -1,1 +1,1 @@
-# spring-suth-practice
+# spring-auth-practice
