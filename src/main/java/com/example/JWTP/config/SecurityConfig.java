@@ -45,7 +45,7 @@ public class SecurityConfig {
 
         //csrf disable
         http.csrf((auth) -> auth.disable());
-        //From 로그인 방식 disable
+        //form 로그인 방식 disable
         http.formLogin((auth) -> auth.disable());
         //http basic 인증 방식 disable
         http.httpBasic((auth) -> auth.disable());
@@ -53,12 +53,13 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/login","/","/join").permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/authTester.html").permitAll()
                 .anyRequest().authenticated());
 
-        //JWTFilter 등록
+        //JWTFilter 등록 (JWTFilter를 LoginFilter보다 먼저 실행)
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
-        //LoginFilter 등록
+        //LoginFilter 등록 (LoginFilter를 UsernamePasswordAuthenticationFilter 자리(스프링시큐리티가 기본적으로 실행하는 필터)에 등록)
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>JWT 테스트 패널</title>
+</head>
+<body>
+<h1>Spring JWT 테스트</h1>
+
+<label>Username: <input id="username" /></label><br/>
+<label>Password: <input type="password" id="password" /></label><br/>
+
+<button onclick="join()">회원가입</button>
+<button onclick="login()">로그인</button>
+<button onclick="callMain()">/ 호출 (인증 확인)</button>
+
+<pre id="log"></pre>
+
+<script>
+    const baseURL = "http://localhost:8080";
+    let token = "";
+
+    function log(msg) {
+        document.getElementById("log").textContent += msg + "\n";
+    }
+
+    async function join() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const res = await fetch(baseURL + "/join", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ username, password })
+        });
+        log("join: " + (await res.text()));
+    }
+
+    async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const res = await fetch(baseURL + "/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ username, password })
+        });
+
+        if (res.status === 200) {
+            log("로그인 성공");
+
+            // Authorization 헤더에서 토큰 꺼내기
+            const authHeader = res.headers.get("Authorization");
+            if (authHeader && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7); // "Bearer " 뒷부분
+                log("토큰 저장됨: " + token);
+            } else {
+                log("응답에 Authorization 헤더가 없음");
+            }
+        } else {
+            log("로그인 실패: status=" + res.status);
+        }
+    }
+
+    async function callMain() {
+        if (!token) {
+            log("토큰이 없습니다. 먼저 로그인하세요.");
+            return;
+        }
+
+        const res = await fetch(baseURL + "/", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        const text = await res.text();
+        log("/ 호출 결과: " + text);
+    }
+</script>
+</body>
+</html>

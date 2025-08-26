@@ -26,6 +26,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        System.out.println("[LoginFilter] attemptAuthentication");
 
         //클라이언트 요청에서 username, password 추출
         String username = obtainUsername(request);
@@ -42,6 +43,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     //로그인 성공시 실행하는 메소드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+        System.out.println("[LoginFilter] successfulAuthentication");
         //UserDetails
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal(); // 특정 유저 꺼내기
 
@@ -64,6 +66,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     //로그인 실패시 실행하는 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        System.out.println("[LoginFilter] unsuccessfulAuthentication");
         //로그인 실패시 401 응답 코드 반환
         response.setStatus(401);
     }
