@@ -4,4 +4,4 @@
 
 과정 정리 노션 : https://www.notion.so/spring-security-256933933a56809b97f9fe47cdcff1ce
 
-Spring Security + JWT 실습
+Spring Security + JWT 따라하기 실습
